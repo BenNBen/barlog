@@ -33,6 +33,24 @@ class Log extends BaseLog {
     }
 }
 
+class Error extends BaseLog {
+    constructor(o) {
+        super(o)
+    }
+    Print() {
+        console.error(this.data)
+    }
+}
+
+class Warn extends BaseLog {
+    constructor(o) {
+        super(o)
+    }
+    Print() {
+        console.warn(this.data)
+    }
+}
+
 class Table extends BaseLog {
     constructor(o) {
         super(o)
@@ -117,21 +135,53 @@ Barlog.prototype.Print = function () {
 }
 
 /**
+ * @purpose Append a traditional console assert message to the queue of the current Logger instance
+ * @param cond{ition {Boolean} Conditional value where false results in the message being output by the logger
+ * @param {*} variable number of arguments passed in as input in order to operate similarly to default javascript console assert
+ */
+Barlog.prototype.assert = function (condition) {
+    let len = arguments.length;
+    if (len < 2) {
+        console.error("No Message Queued for Logger");
+        return;
+    }
+    if (condition === false) {
+        var newArg = arguments.slice(1);
+        this.queue.push(new Log(...newArg));
+        this.hasLog(true);
+    }
+
+}
+
+/**
+ * @purpose Append a traditional console error message to the queue of the current Logger instance
+ * @param {*} variable number of arguments passed in as input in order to operate similarly to default javascript console error
+ */
+Barlog.prototype.error = function () {
+    this.queue.push(new Error(...arguments));
+    this.hasLog(true);
+}
+
+/**
+ * @purpose Append a traditional console warning message to the queue of the current Logger instance
+ * @param {*} variable number of arguments passed in as input in order to operate similarly to default javascript console warning
+ */
+Barlog.prototype.warn = function () {
+    this.queue.push(new Warn(...arguments));
+    this.hasLog(true);
+}
+
+/**
  * @purpose Append a traditional console log message to the queue of the current Logger instance
  * @param {*} variable number of arguments passed in as input in order to operate similarly to default javascript console log
  */
 Barlog.prototype.log = function () {
     let len = arguments.length;
-    let logMsg = '';
     if (len < 1) {
         console.error("No Message Queued for Logger");
         return;
     }
-    for (var i = 0; i < len; i++) {
-        logMsg += `${arguments[i]} `;
-    }
-
-    this.queue.push(new Log(logMsg));
+    this.queue.push(new Log(...arguments));
     this.hasLog(true);
 }
 
