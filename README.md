@@ -1,4 +1,8 @@
 # barlog
 Simple javascript file to provide more complex way of grouping console log information
 
-Currently provides support for multiple console groups at once, as well as nested groups with styling.
+
+Included Features:
+    Multiple concurrent console log groups
+    Nested groups with styling support
+    Integrated interval timers for routine output
